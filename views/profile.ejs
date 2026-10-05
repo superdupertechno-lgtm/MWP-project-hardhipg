@@ -1,0 +1,47 @@
+<%- include('partials/head', { title }) %>
+<article class="profile">
+  <aside class="profile-id">
+    <%- include('partials/avatar', { user: profile, size: 'xl' }) %>
+    <p class="profile-handle">@<%= profile.username %></p>
+    <% if (profile.location) { %><p class="profile-place"><%= profile.location %></p><% } %>
+    <p class="profile-since">Joined <%= formatDate(profile.created_at) %></p>
+    <% if (isOwner) { %>
+      <p class="profile-actions"><a class="btn btn-primary" href="/profile/edit">Edit profile</a></p>
+    <% } %>
+  </aside>
+
+  <div class="profile-body">
+    <% if (isOwner && !profile.is_public) { %>
+      <p class="banner">Only you can see this profile. Make it public in <a href="/profile/edit">Edit profile</a>.</p>
+    <% } %>
+
+    <h1><%= profile.display_name %></h1>
+    <% if (profile.headline) { %>
+      <p class="profile-headline"><%= profile.headline %></p>
+    <% } else if (isOwner) { %>
+      <p class="profile-headline is-empty">Add a headline that says what you do. <a href="/profile/edit">Add one</a></p>
+    <% } %>
+
+    <% if (profile.bio) { %>
+      <p class="profile-bio"><%= profile.bio %></p>
+    <% } else if (isOwner) { %>
+      <p class="profile-bio is-empty">Your bio is empty. <a href="/profile/edit">Write a few lines</a> about yourself.</p>
+    <% } %>
+
+    <% if (profile.website || profile.github || profile.linkedin) { %>
+      <h2 class="sr-only">Links</h2>
+      <ul class="links">
+        <% if (profile.website) { %>
+          <li><span>Website</span><a href="<%= profile.website %>" rel="me noopener noreferrer nofollow" target="_blank"><%= profile.website.replace(/^https?:\/\//, '').replace(/\/$/, '') %></a></li>
+        <% } %>
+        <% if (profile.github) { %>
+          <li><span>GitHub</span><a href="https://github.com/<%= encodeURIComponent(profile.github) %>" rel="me noopener noreferrer nofollow" target="_blank"><%= profile.github %></a></li>
+        <% } %>
+        <% if (profile.linkedin) { %>
+          <li><span>LinkedIn</span><a href="https://www.linkedin.com/in/<%= encodeURIComponent(profile.linkedin) %>" rel="me noopener noreferrer nofollow" target="_blank"><%= profile.linkedin %></a></li>
+        <% } %>
+      </ul>
+    <% } %>
+  </div>
+</article>
+<%- include('partials/foot') %>

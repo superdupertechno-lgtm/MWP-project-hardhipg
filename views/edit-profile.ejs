@@ -1,0 +1,63 @@
+<%- include('partials/head', { title }) %>
+<section class="form-page form-wide">
+  <h1>Edit profile</h1>
+  <p class="lede">This is what people see at <a href="/u/<%= profile.username %>">/u/<%= profile.username %></a>.</p>
+
+  <form method="post" action="/profile/edit" enctype="multipart/form-data" novalidate>
+    <input type="hidden" name="_csrf" value="<%= csrf() %>">
+
+    <fieldset>
+      <legend>About you</legend>
+      <%- include('partials/field', { f: { name: 'display_name', label: 'Name', value: values.display_name, error: errors.display_name, autocomplete: 'name', required: true, maxlength: 50 } }) %>
+      <%- include('partials/field', { f: { name: 'headline', label: 'Headline', value: values.headline, error: errors.headline, hint: 'One line on what you do.', maxlength: 80 } }) %>
+      <div class="field<%= errors.bio ? ' has-error' : '' %>">
+        <label for="f-bio">Bio</label>
+        <textarea id="f-bio" name="bio" rows="5" maxlength="400" <% if (errors.bio) { %>aria-invalid="true" aria-describedby="err-bio"<% } %>><%= values.bio %></textarea>
+        <% if (errors.bio) { %><p class="error" id="err-bio"><%= errors.bio %></p><% } %>
+      </div>
+      <%- include('partials/field', { f: { name: 'location', label: 'Location', value: values.location, error: errors.location, autocomplete: 'off', maxlength: 60 } }) %>
+    </fieldset>
+
+    <fieldset>
+      <legend>Links</legend>
+      <%- include('partials/field', { f: { name: 'website', label: 'Website', value: values.website, error: errors.website, hint: 'For example, example.com', autocomplete: 'url', maxlength: 200 } }) %>
+      <%- include('partials/field', { f: { name: 'github', label: 'GitHub username', value: values.github, error: errors.github, prefix: 'github.com/', maxlength: 100 } }) %>
+      <%- include('partials/field', { f: { name: 'linkedin', label: 'LinkedIn profile name', value: values.linkedin, error: errors.linkedin, prefix: 'linkedin.com/in/', maxlength: 100 } }) %>
+    </fieldset>
+
+    <fieldset>
+      <legend>Visibility</legend>
+      <label class="check">
+        <input type="checkbox" name="is_public" <%= values.is_public ? 'checked' : '' %>>
+        <span>Show my profile to everyone and list it on the home page</span>
+      </label>
+    </fieldset>
+
+    <fieldset>
+      <legend>Photo</legend>
+      <div class="photo-row">
+        <%- include('partials/avatar', { user: profile, size: 'lg' }) %>
+        <div class="photo-controls">
+          <% if (profile.avatar) { %>
+            <label class="check">
+              <input type="checkbox" name="remove_avatar">
+              <span>Remove my current photo</span>
+            </label>
+          <% } %>
+          <div class="field<%= errors.avatar ? ' has-error' : '' %>">
+            <label for="f-avatar"><%= profile.avatar ? 'Replace photo' : 'Upload a photo' %></label>
+            <p class="hint" id="hint-avatar">PNG, JPG, or WebP, up to 2 MB.</p>
+            <input id="f-avatar" name="avatar" type="file" accept="image/png,image/jpeg,image/webp" aria-describedby="hint-avatar<%= errors.avatar ? ' err-avatar' : '' %>">
+            <% if (errors.avatar) { %><p class="error" id="err-avatar"><%= errors.avatar %></p><% } %>
+          </div>
+        </div>
+      </div>
+    </fieldset>
+
+    <div class="actions">
+      <button class="btn btn-primary" type="submit">Save changes</button>
+      <a class="btn btn-quiet" href="/u/<%= profile.username %>">Cancel</a>
+    </div>
+  </form>
+</section>
+<%- include('partials/foot') %>

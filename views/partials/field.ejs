@@ -1,0 +1,24 @@
+<%
+  const o = Object.assign({
+    type: 'text', value: '', error: '', hint: '', prefix: '',
+    autocomplete: 'off', required: false, maxlength: '', autofocus: false, id: ''
+  }, f);
+  const fid = o.id || `f-${o.name}`;
+  const describedBy = [o.hint ? `${fid}-hint` : '', o.error ? `${fid}-err` : ''].filter(Boolean).join(' ');
+%>
+<div class="field<%= o.error ? ' has-error' : '' %>">
+  <label for="<%= fid %>"><%= o.label %></label>
+  <% if (o.hint) { %><p class="hint" id="<%= fid %>-hint"><%= o.hint %></p><% } %>
+  <div class="input-wrap">
+    <% if (o.prefix) { %><span class="prefix" aria-hidden="true"><%= o.prefix %></span><% } %>
+    <input id="<%= fid %>" name="<%= o.name %>" type="<%= o.type %>"
+      value="<%= o.type === 'password' ? '' : o.value %>"
+      autocomplete="<%= o.autocomplete %>"
+      <% if (o.maxlength) { %>maxlength="<%= o.maxlength %>"<% } %>
+      <% if (o.required) { %>required<% } %>
+      <% if (o.autofocus) { %>autofocus<% } %>
+      <% if (describedBy) { %>aria-describedby="<%= describedBy %>"<% } %>
+      <% if (o.error) { %>aria-invalid="true"<% } %>>
+  </div>
+  <% if (o.error) { %><p class="error" id="<%= fid %>-err"><%= o.error %></p><% } %>
+</div>

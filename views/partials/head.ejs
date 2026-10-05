@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title><%= title ? `${title} · Handle` : 'Handle · Your name, one page' %></title>
+  <meta name="description" content="Make a profile at your own handle and share one link.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Instrument+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="site-header">
+  <div class="wrap bar">
+    <a class="brand" href="/">Handle</a>
+    <nav class="nav" aria-label="Main">
+      <% if (currentUser) { %>
+        <a class="nav-me" href="/u/<%= currentUser.username %>">
+          <%- include('avatar', { user: currentUser, size: 'sm' }) %>
+          <span><%= currentUser.username %></span>
+        </a>
+        <a href="/profile/edit">Edit profile</a>
+        <a href="/account">Account</a>
+        <form action="/logout" method="post">
+          <input type="hidden" name="_csrf" value="<%= csrf() %>">
+          <button class="link-btn" type="submit">Log out</button>
+        </form>
+      <% } else { %>
+        <a href="/login">Log in</a>
+        <a class="btn btn-primary btn-small" href="/signup">Create profile</a>
+      <% } %>
+    </nav>
+  </div>
+</header>
+<% if (flash) { %>
+  <div class="wrap">
+    <p class="flash flash-<%= flash.type %>" role="status"><%= flash.message %></p>
+  </div>
+<% } %>
+<main id="main" class="wrap">

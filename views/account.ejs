@@ -1,0 +1,38 @@
+<%- include('partials/head', { title }) %>
+<section class="form-page form-wide">
+  <h1>Account</h1>
+  <p class="lede">Signed in as <strong>@<%= account.username %></strong>. Usernames can’t be changed.</p>
+
+  <form method="post" action="/account/email" novalidate>
+    <input type="hidden" name="_csrf" value="<%= csrf() %>">
+    <fieldset>
+      <legend>Email</legend>
+      <%- include('partials/field', { f: { name: 'email', label: 'Email address', type: 'email', value: values.email !== undefined ? values.email : account.email, error: errors.email, autocomplete: 'email', required: true, maxlength: 254 } }) %>
+      <%- include('partials/field', { f: { name: 'current_password', id: 'pw-email', label: 'Current password', type: 'password', error: errors.email_password, autocomplete: 'current-password', required: true } }) %>
+      <button class="btn btn-primary" type="submit">Update email</button>
+    </fieldset>
+  </form>
+
+  <form method="post" action="/account/password" novalidate>
+    <input type="hidden" name="_csrf" value="<%= csrf() %>">
+    <fieldset>
+      <legend>Password</legend>
+      <%- include('partials/field', { f: { name: 'current_password', id: 'pw-change', label: 'Current password', type: 'password', error: errors.password_current, autocomplete: 'current-password', required: true } }) %>
+      <%- include('partials/field', { f: { name: 'new_password', label: 'New password', type: 'password', error: errors.password_new, hint: 'At least 8 characters.', autocomplete: 'new-password', required: true } }) %>
+      <%- include('partials/field', { f: { name: 'confirm_password', label: 'Confirm new password', type: 'password', error: errors.password_confirm, autocomplete: 'new-password', required: true } }) %>
+      <button class="btn btn-primary" type="submit">Change password</button>
+    </fieldset>
+  </form>
+
+  <form method="post" action="/account/delete" novalidate>
+    <input type="hidden" name="_csrf" value="<%= csrf() %>">
+    <fieldset class="danger">
+      <legend>Delete account</legend>
+      <p class="hint">This removes your profile, photo, and login for good. It can’t be undone.</p>
+      <%- include('partials/field', { f: { name: 'confirm_username', label: `Type ${account.username} to confirm`, error: errors.delete_username, required: true } }) %>
+      <%- include('partials/field', { f: { name: 'current_password', id: 'pw-delete', label: 'Current password', type: 'password', error: errors.delete_password, autocomplete: 'current-password', required: true } }) %>
+      <button class="btn btn-danger" type="submit">Delete my account</button>
+    </fieldset>
+  </form>
+</section>
+<%- include('partials/foot') %>

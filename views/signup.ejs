@@ -1,0 +1,15 @@
+<%- include('partials/head', { title }) %>
+<section class="form-page">
+  <h1>Create your profile</h1>
+  <p class="lede">Pick a username first. It becomes your web address.</p>
+  <form method="post" action="/signup" novalidate>
+    <input type="hidden" name="_csrf" value="<%= csrf() %>">
+    <%- include('partials/field', { f: { name: 'username', label: 'Username', prefix: '/u/', value: values.username || '', error: errors.username, hint: '3–20 letters, numbers, or underscores.', autocomplete: 'username', required: true, maxlength: 20, autofocus: !values.username || !!errors.username } }) %>
+    <%- include('partials/field', { f: { name: 'email', label: 'Email', type: 'email', value: values.email || '', error: errors.email, autocomplete: 'email', required: true, maxlength: 254, autofocus: !!values.username && !errors.username } }) %>
+    <%- include('partials/field', { f: { name: 'password', label: 'Password', type: 'password', error: errors.password, hint: 'At least 8 characters.', autocomplete: 'new-password', required: true } }) %>
+    <%- include('partials/field', { f: { name: 'confirm', label: 'Confirm password', type: 'password', error: errors.confirm, autocomplete: 'new-password', required: true } }) %>
+    <button class="btn btn-primary" type="submit">Create profile</button>
+  </form>
+  <p class="aside">Already have an account? <a href="/login">Log in</a></p>
+</section>
+<%- include('partials/foot') %>

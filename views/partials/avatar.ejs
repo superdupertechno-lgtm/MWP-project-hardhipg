@@ -1,0 +1,6 @@
+<% const t = tone(user.username); %>
+<% if (user.avatar) { %>
+  <img class="avatar avatar-<%= size %>" src="/uploads/<%= user.avatar %>" alt="" width="240" height="240" loading="lazy">
+<% } else { %>
+  <span class="avatar avatar-<%= size %> tone-<%= t %>" aria-hidden="true"><%= initials(user.display_name) %></span>
+<% } %>

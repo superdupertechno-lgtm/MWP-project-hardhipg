@@ -1,0 +1,13 @@
+<%- include('partials/head', { title }) %>
+<section class="form-page">
+  <h1>Log in</h1>
+  <% if (error) { %><p class="flash flash-error" role="alert"><%= error %></p><% } %>
+  <form method="post" action="/login" novalidate>
+    <input type="hidden" name="_csrf" value="<%= csrf() %>">
+    <%- include('partials/field', { f: { name: 'identifier', label: 'Username or email', value: values.identifier || '', autocomplete: 'username', required: true, autofocus: true } }) %>
+    <%- include('partials/field', { f: { name: 'password', label: 'Password', type: 'password', autocomplete: 'current-password', required: true } }) %>
+    <button class="btn btn-primary" type="submit">Log in</button>
+  </form>
+  <p class="aside">New here? <a href="/signup">Create a profile</a></p>
+</section>
+<%- include('partials/foot') %>

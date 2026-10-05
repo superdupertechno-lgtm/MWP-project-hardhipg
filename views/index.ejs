@@ -1,0 +1,68 @@
+<%- include('partials/head', { title }) %>
+<section class="hero">
+  <h1>Your name,<br>one page.</h1>
+  <p class="lede">Make a profile at your own handle, then share a single link instead of five.</p>
+  <% if (currentUser) { %>
+    <p class="hero-actions">
+      <a class="btn btn-primary" href="/u/<%= currentUser.username %>">View your profile</a>
+      <a class="btn btn-quiet" href="/profile/edit">Edit profile</a>
+    </p>
+  <% } else { %>
+    <form class="claim" action="/signup" method="get">
+      <label class="sr-only" for="claim-username">Choose a username</label>
+      <span class="claim-field">
+        <span class="prefix" aria-hidden="true">/u/</span>
+        <input id="claim-username" name="username" type="text" placeholder="yourname"
+          autocomplete="off" autocapitalize="none" spellcheck="false" maxlength="20" required>
+      </span>
+      <button class="btn btn-primary" type="submit">Claim it</button>
+    </form>
+  <% } %>
+</section>
+
+<section class="directory" aria-labelledby="dir-title">
+  <div class="directory-head">
+    <h2 id="dir-title">People on Handle</h2>
+    <form class="search" action="/" method="get" role="search">
+      <label class="sr-only" for="q">Search people</label>
+      <input id="q" name="q" type="search" value="<%= q %>" placeholder="Search by name, headline, or place" maxlength="50">
+      <button class="btn btn-quiet" type="submit">Search</button>
+    </form>
+  </div>
+
+  <% if (people.length === 0) { %>
+    <div class="empty">
+      <% if (q) { %>
+        <p>No public profiles match “<%= q %>”. Try a different word, or <a href="/">clear the search</a>.</p>
+      <% } else { %>
+        <p>No public profiles yet. <a href="/signup">Create the first one.</a></p>
+      <% } %>
+    </div>
+  <% } else { %>
+    <p class="count"><%= total %> <%= total === 1 ? 'profile' : 'profiles' %><%= q ? ` matching “${q}”` : '' %></p>
+    <ul class="people">
+      <% people.forEach((p) => { %>
+        <li>
+          <a class="person" href="/u/<%= p.username %>">
+            <%- include('partials/avatar', { user: p, size: 'md' }) %>
+            <span class="person-text">
+              <span class="person-name"><%= p.display_name %></span>
+              <span class="person-handle">@<%= p.username %></span>
+              <% if (p.headline) { %><span class="person-headline"><%= p.headline %></span><% } %>
+              <% if (p.location) { %><span class="person-place"><%= p.location %></span><% } %>
+            </span>
+          </a>
+        </li>
+      <% }) %>
+    </ul>
+    <% if (pages > 1) { %>
+      <nav class="pager" aria-label="Pages">
+        <% const base = q ? `/?q=${encodeURIComponent(q)}&page=` : '/?page='; %>
+        <% if (page > 1) { %><a class="btn btn-quiet" href="<%= base + (page - 1) %>">Previous</a><% } %>
+        <span>Page <%= page %> of <%= pages %></span>
+        <% if (page < pages) { %><a class="btn btn-quiet" href="<%= base + (page + 1) %>">Next</a><% } %>
+      </nav>
+    <% } %>
+  <% } %>
+</section>
+<%- include('partials/foot') %>
